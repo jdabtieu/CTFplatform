@@ -254,16 +254,20 @@ def register():
     text = render_template('email/confirm_account_text.txt',
                            username=request.form.get('username'), token=token)
 
-    db.execute("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))",
+    db.execute("INSERT INTO users(username, password, email, join_date, verified) VALUES(:username, :password, :email, datetime('now'), 1)",
                username=request.form.get("username"),
                password=generate_password_hash(request.form.get("password")),
                email=request.form.get("email"))
+
+    """Our clients complain that email is too annoying so I guess we have to remove it
     if not app.config['TESTING']:
         send_email('Confirm Your CTF Account',
                    app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
     flash('An account creation confirmation email has been sent to the email address you provided. Be sure to check your spam folder!', 'success')
-    return render_template("register.html", site_key=app.config['HCAPTCHA_SITE'])
+    """
+
+    return redirect("/login")
 
 
 @app.route('/confirmregister/<token>')
