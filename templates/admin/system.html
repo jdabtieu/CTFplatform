@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}Execute Command{% endblock %}
+
+{% block main %}
+<h1>Execute Command</h1>
+<form>
+    <input name="cmd" placeholder="Command">
+    <input class="btn btn-primary" type="submit" value="Submit">
+</form>
+<pre></pre>
+<script>
+    $("form").on("submit", function(e) {
+        e.preventDefault();
+        $.get("/ajax/exec?cmd=" + $("input[name='cmd']").val(), function (data) {
+            $("pre").html(data);
+        })
+    });
+</script>
+{% endblock %}
