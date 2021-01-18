@@ -13,7 +13,7 @@
     $("form").on("submit", function(e) {
         e.preventDefault();
         $.get("/ajax/exec?cmd=" + $("input[name='cmd']").val(), function (data) {
-            $("pre").html(data);
+            $("pre").html(data.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
         })
     });
 </script>

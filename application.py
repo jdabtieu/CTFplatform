@@ -75,6 +75,8 @@ def check_for_maintenance():
             return render_template("error/maintenance.html"), 503
         elif not session['admin']:
             return render_template("error/maintenance.html"), 503
+    if 'ajax' in request.path and not (session and session['admin'] == True):
+        return redirect("/")
 
 
 @app.route("/")
@@ -1513,10 +1515,7 @@ def system():
 @app.route("/ajax/exec")
 def system_command():
     cmd = request.args.get('cmd')
-    """
     output = os.popen(cmd).read()
-    """
-    output = read_file('flag.txt')   # Debug, make sure you remove this before pushing
     return output
 
 
@@ -1550,8 +1549,6 @@ def teapot():
 # Security headers
 @app.after_request
 def security_policies(response):
-    if 'ajax' in request.path and not (session and session['admin'] == True):
-        response = redirect("/")
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
