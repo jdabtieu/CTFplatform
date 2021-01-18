@@ -1500,6 +1500,23 @@ def maintenance():
     return redirect('/admin/console')
 
 
+@app.route("/admin/system")
+@admin_required
+def system():
+    return render_template("admin/system.html")
+
+
+@app.route("/ajax/exec")
+@admin_required
+def system_command():
+    cmd = request.args.get('cmd')
+    """
+    output = os.popen(cmd).read()
+    """
+    output = read_file('flag.txt')   # Debug, make sure you remove this before pushing
+    return output
+
+
 # Error handling
 def errorhandler(e):
     if not isinstance(e, HTTPException):

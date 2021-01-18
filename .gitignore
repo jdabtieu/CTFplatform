@@ -27,3 +27,5 @@ coverage.xml
 /database_test.db
 /database_test.db-journal
 test_upload.txt
+flag.txt
+
